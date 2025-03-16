@@ -25,7 +25,7 @@ $busqueda = isset($_GET['busqueda']) ? trim($_GET['busqueda']) : '';
 
 // Construir la consulta SQL base
 $sql = "SELECT r.id_recurso, r.nombre, r.estado, r.ubicacion, r.disponible, 
-               r.fecha_alta, t.nombre as tipo
+               r.fecha_alta, t.nombre as tipo, t.id_tipo
         FROM recursos r
         JOIN tipos_recursos t ON r.id_tipo = t.id_tipo";
 
@@ -126,7 +126,7 @@ $puede_modificar = has_role([ROL_ADMIN, ROL_ACADEMICO]);
                             <option value="0">Todos</option>
                             <?php foreach ($tipos as $tipo): ?>
                                 <option value="<?php echo $tipo['id_tipo']; ?>" <?php echo ($filtro_tipo == $tipo['id_tipo']) ? 'selected' : ''; ?>>
-                                    <?php echo $tipo['nombre']; ?>
+                                    <?php echo htmlspecialchars($tipo['nombre']); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -215,7 +215,7 @@ $puede_modificar = has_role([ROL_ADMIN, ROL_ACADEMICO]);
                                                 <a href="editar.php?id=<?php echo $recurso['id_recurso']; ?>" class="accion-btn btn-editar">Editar</a>
 
                                                 <?php if (has_role(ROL_ADMIN)): ?>
-                                                    <a href="eliminar.php?id=<?php echo $recurso['id_recurso']; ?>"
+                                                    <a href="procesar.php?accion=eliminar&id=<?php echo $recurso['id_recurso']; ?>"
                                                         onclick="return confirm('¿Estás seguro de eliminar este recurso?');"
                                                         class="accion-btn btn-eliminar">Eliminar</a>
                                                 <?php endif; ?>
@@ -232,7 +232,6 @@ $puede_modificar = has_role([ROL_ADMIN, ROL_ACADEMICO]);
     </div>
 
     <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/validation.js"></script>
 </body>
 
 </html>
